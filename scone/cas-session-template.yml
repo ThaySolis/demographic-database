@@ -1,0 +1,26 @@
+name: $SCONE_CONFIG_ID
+version: "0.3"
+
+services:
+   - name: mongod_service
+     image_name: mongo_image
+     command: mongod --auth --dbpath "/data_mongo/db" --port "$DB_PORT" --bind_ip 0.0.0.0
+     mrenclaves: [$MRENCLAVE1, $MRENCLAVE2]
+     fspf_path: /fspf/fspf.pb
+     fspf_key: $FSPF_KEY
+     fspf_tag: $FSPF_TAG
+
+volumes:
+  - name: mongo_volume
+
+images:
+   - name: mongo_image
+     volumes:
+        - name: mongo_volume
+          path: /data_mongo
+
+security:
+  attestation:
+    tolerate: [debug-mode, hyperthreading, outdated-tcb, insecure-igpu, software-hardening-needed, insecure-configuration]
+    ignore_advisories: "*"   
+ 
